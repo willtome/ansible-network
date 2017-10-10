@@ -1,0 +1,11 @@
+---
+- name: Gather port configuration
+  nxos_command:
+    commands:
+      - show run interface {{ interface_port }}
+
+- name: Set Interface Admin State
+  nxos_config:
+    lines:
+      - "{{ shut_noshut }}"
+    parents: interface {{ interface_port }}

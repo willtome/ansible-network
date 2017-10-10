@@ -1,0 +1,4 @@
+#ntp_peering_key: "{{ vault_ntp_peering_key }}"
+ntp_service_ipv4: 10.36.0.80
+ntp_service_ipv6: 2001:4898::ff:100:3600:80
+ntp_source: Loopback0

@@ -1,0 +1,25 @@
+{% if msit_buildingitsitetypedesc is defined and 'IT Data Center' in msit_buildingitsitetypedesc %}
+ntp source {{ mgmt_interface_name | default(ntp_source) }}
+ntp server {{ ntp_service_ipv4 }}
+{% if ipv6_interface is defined and ipv6_interface.stdout is defined 
+	and 'IPv6 is enabled' in ipv6_interface.stdout[0] and ntp_service_ipv6 is defined 
+	and not (ansible_net_version.startswith('12') and msit_devicetypename is defined and msit_devicetypename == 'Router') %}
+ntp server {{ ntp_service_ipv6 }} key 1 prefer
+{% endif %}
+
+{% else %}
+ntp authentication-key 1 md5 {{ ntp_peering_key }}
+ntp authenticate
+ntp trusted-key 1
+ntp source {{ mgmt_interface_name | default(ntp_source) }}
+ntp server {{ ntp_service_ipv4 }} key 1
+{#
+## NTP IPv6 address only if device is managed with IPv6 ###
+## IF router with version 12.* skip ipv6 ##
+#}
+{% if ipv6_interface is defined and ipv6_interface.stdout is defined 
+	and 'IPv6 is enabled' in ipv6_interface.stdout[0] and ntp_service_ipv6 is defined 
+	and not (ansible_net_version.startswith('12') and msit_devicetypename is defined and msit_devicetypename == 'Router') %}
+ntp server {{ ntp_service_ipv6 }} key 1 prefer
+{% endif %}
+{% endif %}

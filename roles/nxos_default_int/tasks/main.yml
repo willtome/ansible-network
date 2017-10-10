@@ -1,0 +1,10 @@
+---
+- name: Gather port configuration
+  nxos_command:
+    commands:
+      - show run interface {{ interface_port }}
+
+- name: Clear configuration
+  nxos_config:
+    lines:
+      - default interface {{ interface_port }}

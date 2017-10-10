@@ -1,0 +1,9 @@
+---
+- hosts: nxos
+  connection: local
+  gather_facts: no
+  
+  tasks:
+  - nxos_command: 
+      commands:
+        - show run

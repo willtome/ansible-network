@@ -1,0 +1,56 @@
+---
+- name: collect output from nxos device
+  nxos_command:
+    host: "{{ inventory_hostname }}"
+    commands:
+      - show version
+      - show interface
+      - show running-config all
+      - show ip interface brief vrf all | include {{ ansible_host }}
+  register: output
+
+# common facts
+#
+- name: set hostname fact
+  set_fact:
+    hostname: "{{ output.stdout[0] | regex_findall('\\s+Device name:\\s+(\\S+)') | first }}"
+
+- name: set interfaces fact
+  set_fact:
+    interfaces: "{{ output.stdout[1] | regex_findall('\n([E|L|P|V]\\S+)') }}"
+
+- name: set version fact
+  set_fact:
+    version: "{{ output.stdout[0] | regex_findall('(system|NXOS):\\s+version\\s+(\\S+)') | first }}"
+
+- name: set config fact
+  set_fact:
+    config: "{{ output.stdout[2] }}"
+
+- name: set config_lines fact
+  set_fact:
+    config_lines: "{{ config.split('\n') }}"
+
+#- name: display backup_file path
+#  debug: var=config_lines
+
+- name: Port-channel Check
+  nxos_command:
+    commands:
+      - show interface port-channel{{ port }}
+    wait_for:
+      - result[0] contains "port-channel{{ port }} is up"
+
+- name: Interface state
+  nxos_command:
+    commands:
+      - show interface {{ interface_add }}
+    wait_for:
+      - result[0] contains "is up"
+
+- name: OSPF Check
+  nxos_command:
+    commands:
+      - show routing ospf-1 detail
+    wait_for:
+      - result[0] contains "127.0.0.0/8, ubest/mbest"

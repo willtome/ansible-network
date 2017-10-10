@@ -1,0 +1,5 @@
+---
+device_os: nxos
+provider:
+      host: "{{ inventory_hostname }}"
+#      transport: cli

@@ -1,0 +1,21 @@
+{% if msit_buildingitsitetypedesc is defined and 'IT Data Center' in msit_buildingitsitetypedesc %}
+ntp
+ server {{ ntp_service_ipv4 }}
+ source {{ mgmt_interface_name | default(ntp_source) }}
+ update-calendar
+{% if 'IPv6 is enabled' in ipv6_interface.stdout[0] and ntp_service_ipv6 is defined %}
+ server ipv6 {{ ntp_service_ipv6 }} prefer
+{% endif %}
+
+{% else %}
+ntp
+ authentication-key 1 md5 {{ ntp_peering_key }}
+ authenticate
+ trusted-key 1
+ server {{ ntp_service_ipv4 }} key 1
+ source {{ mgmt_interface_name | default(ntp_source) }}
+ update-calendar
+{% if 'IPv6 is enabled' in ipv6_interface.stdout[0] and ntp_service_ipv6 is defined %}
+ server ipv6 {{ ntp_service_ipv6 }} key 1 prefer
+{% endif %}
+{% endif %}

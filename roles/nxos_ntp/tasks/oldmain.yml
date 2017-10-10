@@ -1,0 +1,3 @@
+# tasks file for config_ntp
+- name: include device specific tasks
+  include: "{{ device_os }}.yml"

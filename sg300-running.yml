@@ -1,0 +1,25 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      username: cisco
+      password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66633464653566313130656662303939303533383332383933343531343533666562333836383732
+          3235383462303564386130376166633933386263376162370a373962363234363838336663613034
+          63616437613034373931666539613430313134303962646539666439646632613665633832343139
+          3139323834633537320a633464373234356665373064383161396566636338333931333161353036
+          3931
+
+  tasks:
+  - name: gather running config
+    ios_command:
+      commands:
+        - terminal datadump
+        - show run
+      provider: "{{ cli }}"
+    register: config
+
+  - debug: msg="{{ config.stdout_lines }}"

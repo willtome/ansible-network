@@ -1,0 +1,20 @@
+---
+- name: set backup_path fact
+  set_fact:
+    backup_path: "/tmp/backup"
+
+- name: create backup paths
+  file:
+    path: "{{ backup_path }}"
+    state: directory
+  run_once: yes
+  delegate_to: localhost
+
+- name: create backup paths
+  file:
+    path: "{{ backup_path }}/{{ inventory_hostname }}"
+    state: directory
+  delegate_to: localhost
+
+- name: include device specific tasks
+  include: "{{ device_os }}.yml"

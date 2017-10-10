@@ -1,0 +1,49 @@
+- debug: 
+    msg: "START cisco-ios.yml"
+
+# Backup config. Make sure to not run backup again in playbook, later runs overwrite this backup.
+- name: Backup current config
+  ios_config:
+    backup: yes
+    provider: "{{ cli }}"
+  register: backup_config
+
+- debug: 
+    var: backup_config.backup_path
+    verbosity: 3
+
+- block:
+    - name: Get ipv6 interface info
+      ios_command:
+        commands:
+          - show ipv6 interface {{ mgmt_interface_name }}
+        provider: "{{ cli }}"
+      ignore_errors: yes
+      register: ipv6_interface
+
+    - debug: 
+        var: ipv6_interface
+        verbosity: 3
+
+    - name: Default NTP
+      ios_config:
+        lines: default ntp
+        provider: "{{ cli }}"
+
+    - name: Configure NTP
+      ios_config:
+        src: cisco-ios.j2
+        save: yes
+        provider: "{{ cli }}"
+        
+  rescue:
+    - debug: 
+        var: backup_config.backup_path
+        verbosity: 3
+
+    - name: Reset to backed up config
+      ios_config:
+        src: "{{ backup_config.backup_path }}"
+        save: yes
+        provider: "{{ cli }}"
+  
