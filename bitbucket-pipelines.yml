@@ -10,3 +10,9 @@ pipelines:
     - step:
         script:
           - echo "Everything is awesome!"
+  branches:
+    master:
+      step:
+        script:
+          - pwd
+          - tree -a
