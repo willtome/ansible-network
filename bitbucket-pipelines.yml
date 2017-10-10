@@ -15,4 +15,4 @@ pipelines:
       - step:
           script:
             - pwd
-            - tree -a
+            - ls -la
