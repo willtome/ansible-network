@@ -32,5 +32,8 @@
   set_fact:
     config_lines: "{{ config.split('\n') }}"
 
+- name: display interfaces
+  debug: var=interfaces
+
 - name: display backup_file path
   debug: var=config_lines
