@@ -12,7 +12,7 @@ pipelines:
           - echo "Everything is awesome!"
   branches:
     master:
-      step:
-        script:
-          - pwd
-          - tree -a
+      - step:
+          script:
+            - pwd
+            - tree -a
