@@ -14,5 +14,11 @@ pipelines:
     master:
       - step:
           script:
-            - pwd
-            - ls -la
+            - git remote add github git@github.com:willtome/ansible-network.git
+            - commit=$(git rev-parse --short HEAD 2> /dev/null | sed "s/\(.*\)/@\1/")
+            - echo "hosts" >> .gitignore
+            - echo "bitbucket-pipelines.yml" >> .gitignore
+            - git commit -a -m 'Bitbucket sync ${commit}'
+            - git push -f github master 
+
+
