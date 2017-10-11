@@ -1,7 +1,0 @@
----
-- name: reload device now
-  ios_command:
-    host: "{{ inventory_hostname }}"
-    commands:
-      - "reload in 1\ny"
-

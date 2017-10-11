@@ -1,39 +1,54 @@
 ---
-- name: collect output from nxos device
+- name: show version
   nxos_command:
-    #host: "{{ inventory_hostname }}"
     commands:
       - show version
-      - show interface
-      - show running-config all
-      - show ip interface brief vrf all | include {{ ansible_host }}
-    provider: "{{ cli }}"
-  register: output
+  register: version
 
-# common facts
-#
-- name: set hostname fact
-  set_fact:
-    hostname: "{{ output.stdout[0] | regex_findall('\\s+Device name:\\s+(\\S+)') | first }}"
+- name: show vlan
+  nxos_command:
+    commands:
+      - show vlan
+  register: vlan
 
-- name: set interfaces fact
-  set_fact:
-    interfaces: "{{ output.stdout[1] | regex_findall('\n([E|L|P|V]\\S+)') }}"
+- name: show interface brief
+  nxos_command:
+    commands:
+      - show interface brief
+  register: int_brief
 
-- name: set version fact
-  set_fact:
-    version: "{{ output.stdout[0] | regex_findall('(system|NXOS):\\s+version\\s+(\\S+)') | first }}"
+- name: show ip interface brief vrf all
+  nxos_command:
+    commands:
+      - show ip interface brief vrf all
+  register: ip_brief
 
-- name: set config fact
-  set_fact:
-    config: "{{ output.stdout[2] }}"
+- name: show ip route vrf all
+  nxos_command:
+    commands:
+      - show ip route vrf all
+  register: routing
 
-- name: set config_lines fact
-  set_fact:
-    config_lines: "{{ config.split('\n') }}"
+- name: log version
+  debug: msg="{{version.stdout[0] | regex_search('(system:.*version(.*))')}}"
+  tags: log
 
-- name: display interfaces
-  debug: var=interfaces
+- name: log uptime
+  debug: msg="{{version.stdout[0] | regex_search('(uptime.*)')}}"
+  tags: log
 
-- name: display backup_file path
-  debug: var=config_lines
+- name: log vlans
+  debug: msg="{{(vlan.stdout[0] | regex_search('(VLAN.*\n--.*\n(.+\n)+)')).split('\n') }}"
+  tags: log
+
+- name: log ethernet interfaces
+  debug: msg="{{(int_brief.stdout[0] | regex_search('(---.*\n.*Ethernet.*\n.+\n---.*\n(.*up.+\n)+)')).split('\n')}}"
+  tags: log
+
+- name: log ip interfaces
+  debug: msg="{{ip_brief.stdout_lines}}"
+  tags: log
+
+- name: log routing
+  debug: msg="{{routing.stdout_lines}}"
+  tags: log

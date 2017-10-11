@@ -1,6 +1,0 @@
----
-- name: Push Base Config
-  nxos_config:
-    host: '{{ inventory_hostname }}'
-    src: vars/nxos.j2
-    transport: cli

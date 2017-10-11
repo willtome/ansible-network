@@ -2,10 +2,6 @@
 - hosts: nxos
   connection: local
   gather_facts: no
-  vars:
-    cli:
-      username: admin
-      password: admin
 
   roles:
     - nxos_checks

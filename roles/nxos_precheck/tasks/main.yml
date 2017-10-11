@@ -1,6 +1,0 @@
----
-- name: Show Version and Show interfaces
-  nxos_command:
-    host: "{{ inventory_hostname }}"
-    commands:
-      - show interface brief

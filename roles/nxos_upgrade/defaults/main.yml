@@ -1,3 +1,0 @@
-log_file_dir: "{{ playbook_dir }}/logs/"
-enable_logging: True
-conf_file: ""

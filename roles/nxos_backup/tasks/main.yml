@@ -1,20 +1,16 @@
 ---
-- name: set backup_path fact
-  set_fact:
-    backup_path: "/tmp/backup"
+- name: copy running-config startup-config
+  nxos_command:
+    commands:
+      - copy running-config startup-config
 
-- name: create backup paths
-  file:
-    path: "{{ backup_path }}"
-    state: directory
-  run_once: yes
-  delegate_to: localhost
+- name: show startup-config
+  nxos_command:
+    commands:
+      - show startup-config
+  register: config
 
-- name: create backup paths
-  file:
-    path: "{{ backup_path }}/{{ inventory_hostname }}"
-    state: directory
-  delegate_to: localhost
-
-- name: include device specific tasks
-  include: "{{ device_os }}.yml"
+- name: write backup to file
+  copy:
+    content: "{{ config.stdout[0] }}"
+    dest: "/backups/{{inventory_hostname}}_{{ansible_date_time.iso8601}}"

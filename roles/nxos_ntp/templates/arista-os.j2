@@ -1,9 +1,0 @@
-{% if msit_buildingitsitetypedesc is defined and 'IT Data Center' in msit_buildingitsitetypedesc %}
-ntp server {{ ntp_service_ipv4 }}
-
-{% else %}
-ntp authenticate
-ntp authentication-key 1 md5 {{ ntp_peering_key }}
-ntp trusted-key 1
-ntp server {{ ntp_service_ipv4 }} key 1
-{% endif %}

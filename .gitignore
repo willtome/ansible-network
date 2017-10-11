@@ -1,3 +1,2 @@
-*.retry
-hosts
 .DS_STORE
+*.retry

@@ -1,0 +1,13 @@
+[sg300]
+10.0.0.2 ansible_ssh_user=cisco
+
+[nxos]
+nx-osv-1 ansible_host=172.16.1.11
+nx-osv-2 ansible_host=172.16.1.12
+
+[iosv]
+iosv-1 ansible_host=10.255.0.13
+iosv-2 ansible_host=10.255.0.14
+
+[iosv:vars]
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -p 10000 guest@10.0.0.246 -i /home/ansible/.ssh/id_rsa -o StrictHostKeyChecking=no"'

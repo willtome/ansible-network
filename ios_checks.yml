@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - ios_facts:
+    register: facts
+
+  - debug: var=facts 
