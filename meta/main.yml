@@ -2,3 +2,7 @@ galaxy_info:
   author: Will Tome 
   description: Ansible Network Demos
   company: Red Hat
+
+  video_links:
+  - url: https://youtu.be/7FphWEFQbac
+    title: Ansible Netowrking 101
