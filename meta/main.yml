@@ -6,3 +6,9 @@ galaxy_info:
   video_links:
   - url: https://youtu.be/7FphWEFQbac
     title: Ansible Netowrking 101
+
+
+  platforms:
+  - name: NXOS
+    versions:
+    - all
